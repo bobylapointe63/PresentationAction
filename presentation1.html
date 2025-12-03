@@ -1890,7 +1890,7 @@
               prise de contact, demande d'informations, retour d'expérience,
               etc. Ici, le texte reste volontairement générique.
             </p>
-            <form id="contact-form" method="post">
+            <form id="contact-form" method="post" action="traitement.php">
               <div>
                 <label for="nom">Nom *</label>
                 <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
@@ -2182,10 +2182,22 @@
     const confirmationModal = document.getElementById('confirmationModal');
     const confirmationClose = document.getElementById('confirmationClose');
     const confirmationText = document.getElementById('confirmationText');
-    
+    // Affichage automatique de la modale en fonction du statut dans l'URL
+    const params = new URLSearchParams(window.location.search);
+    const status = params.get('status');
+
+    if (status === 'success' && confirmationModal && confirmationText) {
+    confirmationText.textContent = "Merci ! Votre message a été envoyé avec succès. Nous vous répondrons dès que possible.";
+    confirmationModal.classList.add('open');
+    }
+
+    if (status === 'error' && confirmationModal && confirmationText) {
+    confirmationText.textContent = "Une erreur est survenue lors de l'envoi du message. Vous pouvez réessayer ou nous contacter directement par e-mail.";
+    confirmationModal.classList.add('open');
+    }
+
     if (form) {
       form.addEventListener('submit', function(e) {
-        e.preventDefault();
         
         // Vérifier le CAPTCHA
         if (!captchaVerified) {
