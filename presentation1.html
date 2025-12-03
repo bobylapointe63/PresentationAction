@@ -1,1 +1,2413 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Page de démonstration – Collectif Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --accent-rose: #ff5273;
+      --accent-vert: #40d6a0;
+      --accent-bleu: #4a6fff;
+      --accent-violet: #9d4edd;
+      --text: #111827;
+      --muted: #6b7280;
+      --bg: #f5f5f7;
+      --card-bg: #ffffff;
+      --radius-lg: 18px;
+      --shadow-soft: 0 16px 40px rgba(15, 23, 42, 0.12);
+      --max-width: 1100px;
+    }
+    
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top, #ffffff 0, #f1f5f9 45%, #e5e7eb 100%);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    a { 
+      color: inherit; 
+      text-decoration: none; 
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-rose), var(--accent-vert));
+      z-index: 1000;
+      transition: width 0.3s ease;
+    }
+
+    /* Bouton retour en haut */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-rose), var(--accent-vert));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 99;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 20px rgba(255, 82, 115, 0.3);
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(255, 82, 115, 0.4);
+    }
+
+    .page { 
+      min-height: 100vh; 
+      display: flex; 
+      flex-direction: column; 
+    }
+
+    /* HEADER */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .nav {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-logo img {
+      height: 80px;
+      display: block;
+    }
+
+    .brand-text { 
+      display: flex; 
+      flex-direction: column; 
+    }
+    
+    .brand-title {
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    
+    .brand-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    
+    .brand-title span.rose { 
+      color: var(--accent-rose); 
+    }
+    
+    .brand-title span.vert { 
+      color: var(--accent-vert); 
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.25rem;
+      font-size: 0.9rem;
+    }
+    
+    .nav-links a {
+      position: relative;
+      padding: 0.5rem 0;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color 0.2s ease;
+    }
+    
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(to right, var(--accent-rose), var(--accent-vert));
+      transition: width 0.3s ease;
+    }
+    
+    .nav-links a:hover { 
+      color: var(--text); 
+    }
+    
+    .nav-links a:hover::after { 
+      width: 100%; 
+    }
+    
+    .nav-links a.active {
+      color: var(--text);
+    }
+    
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .nav-toggle {
+      display: none;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      z-index: 60;
+      padding: 8px;
+    }
+    
+    .nav-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      margin: 5px 0;
+      background: var(--text);
+      border-radius: 999px;
+      transition: all 0.3s ease;
+    }
+
+    main { 
+      flex: 1; 
+    }
+    
+    section { 
+      padding: 4rem 1.25rem; 
+    }
+    
+    .container { 
+      max-width: var(--max-width); 
+      margin: 0 auto; 
+    }
+
+    /* HERO */
+    .hero {
+      padding-top: 4rem;
+      padding-bottom: 4rem;
+      position: relative;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 3rem;
+      align-items: center;
+    }
+    
+    .kicker {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--accent-rose);
+      margin-bottom: 1rem;
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: rgba(255, 82, 115, 0.1);
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    
+    .hero-title {
+      font-size: clamp(2.3rem, 4vw + 1rem, 3rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, 
+        var(--text) 0%, 
+        var(--accent-rose) 40%, 
+        var(--accent-vert) 100%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 36rem;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+    
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    
+    .btn {
+      border-radius: 999px;
+      padding: 0.9rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      gap: 0.5rem;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-rose), var(--accent-vert));
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(255, 82, 115, 0.25);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 82, 115, 0.35);
+    }
+    
+    .btn-ghost {
+      border: 2px solid rgba(148, 163, 184, 0.3);
+      background: transparent;
+      color: var(--muted);
+    }
+    
+    .btn-ghost:hover {
+      border-color: var(--accent-rose);
+      color: var(--text);
+      transform: translateY(-2px);
+    }
+
+    /* Bouton PDF avec couleurs correspondant aux pastilles */
+    .btn-pdf {
+      padding: 0.7rem 1.4rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      text-decoration: none;
+      position: absolute;
+      bottom: 1.5rem;
+      left: 1.5rem;
+      right: 1.5rem;
+    }
+
+    /* Couleurs spécifiques pour chaque thématique */
+    .card[data-theme="soin"] .btn-pdf {
+      background: linear-gradient(135deg, #ff5273, #ff8fa3);
+    }
+    
+    .card[data-theme="democratie"] .btn-pdf {
+      background: linear-gradient(135deg, #40d6a0, #80e9c0);
+    }
+    
+    .card[data-theme="pratique"] .btn-pdf {
+      background: linear-gradient(135deg, #4a6fff, #8ba3ff);
+    }
+    
+    .card[data-theme="ecologie"] .btn-pdf {
+      background: linear-gradient(135deg, #9d4edd, #c9a4f0);
+    }
+
+    .btn-pdf:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+      filter: brightness(1.1);
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.2);
+    }
+    
+    .hero-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    
+    .hero-meta-label {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent-rose);
+    }
+    
+    .hero-meta-value {
+      font-weight: 700;
+      color: var(--text);
+      font-size: 1.1rem;
+    }
+    
+    .hero-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 15px 40px rgba(15, 23, 42, 0.1);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      transition: all 0.3s ease;
+    }
+    
+    .hero-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
+    }
+    
+    .hero-card-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(255, 82, 115, 0.1);
+      color: var(--accent-rose);
+      margin-bottom: 1.2rem;
+      font-weight: 600;
+    }
+    
+    .hero-card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+    
+    .hero-card-text {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    
+    .hero-card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .tag {
+      font-size: 0.8rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.1);
+      color: var(--muted);
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .tag:hover {
+      background: linear-gradient(135deg, var(--accent-rose), var(--accent-vert));
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* SECTIONS */
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      position: relative;
+      display: inline-block;
+      line-height: 1.2;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -10px;
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(to right, var(--accent-rose), var(--accent-vert));
+      border-radius: 2px;
+    }
+
+    .section-intro {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 42rem;
+      margin-bottom: 2.5rem;
+      line-height: 1.7;
+    }
+
+    /* PHOTO DE GROUPE */
+    .group-photo-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
+      margin-bottom: 3rem;
+      transition: all 0.3s ease;
+    }
+    
+    .group-photo-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(15, 23, 42, 0.15);
+    }
+    
+    .group-photo-card img {
+      width: 100%;
+      border-radius: 12px;
+      display: block;
+      object-fit: cover;
+      max-height: 380px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    
+    .group-photo-card img:hover {
+      transform: scale(1.01);
+    }
+    
+    .group-photo-caption {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* GRILLE COLLECTIF - VERSION AVEC HAUTEUR FIXE */
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+    
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 1.8rem 1.5rem 5.5rem;
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      transition: all 0.3s ease;
+      position: relative;
+      min-height: 340px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(15, 23, 42, 0.15);
+    }
+    
+    .member-initials {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-rose), var(--accent-vert));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 1.2rem;
+      transition: all 0.3s ease;
+    }
+    
+    .card[data-theme="soin"] .member-initials {
+      background: linear-gradient(135deg, #ff5273, #ff8fa3);
+    }
+    
+    .card[data-theme="democratie"] .member-initials {
+      background: linear-gradient(135deg, #40d6a0, #80e9c0);
+    }
+    
+    .card[data-theme="pratique"] .member-initials {
+      background: linear-gradient(135deg, #4a6fff, #8ba3ff);
+    }
+    
+    .card[data-theme="ecologie"] .member-initials {
+      background: linear-gradient(135deg, #9d4edd, #c9a4f0);
+    }
+    
+    .card:hover .member-initials {
+      transform: scale(1.05);
+    }
+    
+    .member-name {
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+    
+    .member-role {
+      font-size: 0.85rem;
+      color: var(--accent-vert);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    
+    .member-bio {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+
+    /* PROJET */
+    .two-columns {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 2.5rem;
+      margin-bottom: 3rem;
+    }
+    
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    
+    .bullet {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 1.2rem;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.8);
+    }
+    
+    .bullet:hover {
+      background: white;
+      transform: translateX(5px);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    }
+    
+    .bullet-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(64, 214, 160, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--accent-vert);
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .bullet:hover .bullet-icon {
+      transform: scale(1.05);
+      background: rgba(255, 82, 115, 0.1);
+    }
+    
+    .bullet-content {
+      flex: 1;
+    }
+    
+    .bullet-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .bullet-text {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    
+    .highlight {
+      background: rgba(64, 214, 160, 0.05);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(64, 214, 160, 0.2);
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .highlight:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(16, 185, 129, 0.15);
+    }
+    
+    .highlight-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--accent-vert);
+    }
+    
+    .highlight-text {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+    
+    .highlight-tagline {
+      font-size: 0.9rem;
+      color: var(--accent-vert);
+      font-weight: 600;
+    }
+
+    /* SECTION TERRAIN */
+    .terrain-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 2.5rem;
+    }
+    
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    
+    .photo-grid-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+    
+    .photo-grid-item img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+      cursor: pointer;
+    }
+    
+    .photo-grid-item:hover img {
+      transform: scale(1.05);
+    }
+    
+    .photo-caption {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+    
+    .events-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 1.8rem;
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
+    }
+    
+    .events-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    /* CONSULTATION */
+    .form-wrapper {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      box-shadow: 0 15px 40px rgba(15, 23, 42, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .form-wrapper:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
+    }
+    
+    .form-wrapper iframe {
+      width: 100%;
+      min-height: 900px;
+      border: none;
+      border-radius: 8px;
+    }
+    
+    .form-note {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 1rem;
+      text-align: center;
+    }
+    
+    .btn-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.5rem;
+      border-radius: 999px;
+      border: 2px solid rgba(148, 163, 184, 0.3);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-link:hover {
+      border-color: var(--accent-rose);
+      color: var(--text);
+      transform: translateY(-2px);
+    }
+
+    /* CONTACT */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 2.5rem;
+    }
+    
+    .contact-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      box-shadow: 0 15px 40px rgba(15, 23, 42, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .contact-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
+    }
+    
+    .contact-card p {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    
+    form { 
+      display: grid; 
+      gap: 1.2rem; 
+    }
+    
+    label {
+      font-size: 0.9rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      display: block;
+      font-weight: 600;
+    }
+    
+    input, textarea {
+      width: 100%;
+      border-radius: 12px;
+      border: 2px solid rgba(148, 163, 184, 0.3);
+      background: white;
+      padding: 0.9rem 1.2rem;
+      font-family: inherit;
+      font-size: 1rem;
+      color: var(--text);
+      transition: all 0.3s ease;
+    }
+    
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent-rose);
+      box-shadow: 0 0 0 3px rgba(255, 82, 115, 0.1);
+    }
+    
+    textarea { 
+      min-height: 140px; 
+      resize: vertical; 
+    }
+
+    /* CAPTCHA */
+    .captcha-container {
+      background: rgba(148, 163, 184, 0.05);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+    }
+    
+    .captcha-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+    
+    .captcha-question {
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      color: var(--muted);
+    }
+    
+    .captcha-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    
+    .captcha-option {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.8rem 1rem;
+      background: white;
+      border: 2px solid rgba(148, 163, 184, 0.2);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .captcha-option:hover {
+      border-color: var(--accent-bleu);
+      background: rgba(74, 111, 255, 0.05);
+    }
+    
+    .captcha-option.selected {
+      border-color: var(--accent-vert);
+      background: rgba(64, 214, 160, 0.1);
+    }
+    
+    .captcha-option input[type="radio"] {
+      margin: 0;
+      width: 18px;
+      height: 18px;
+    }
+    
+    .captcha-option label {
+      margin: 0;
+      font-size: 0.95rem;
+      cursor: pointer;
+      flex-grow: 1;
+    }
+    
+    .captcha-error {
+      color: var(--accent-rose);
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+    
+    .captcha-success {
+      color: var(--accent-vert);
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    .social-box {
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+    
+    .social-box h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .social-box p {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    /* MODAL PDF */
+    .pdf-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      z-index: 95;
+    }
+    
+    .pdf-modal.open {
+      display: flex;
+    }
+    
+    .pdf-modal-inner {
+      position: relative;
+      max-width: 960px;
+      width: 100%;
+      max-height: 90vh;
+      background: #fdfcff;
+      border-radius: 20px;
+      padding: 1.1rem 1.2rem 1.3rem;
+      border: 1px solid rgba(209, 213, 219, 0.9);
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.6);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .pdf-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.6rem;
+    }
+    
+    .pdf-modal-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1f1635;
+    }
+    
+    .pdf-modal-content {
+      flex: 1;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(209, 213, 219, 0.9);
+    }
+    
+    .pdf-frame {
+      width: 100%;
+      height: 100%;
+      min-height: 60vh;
+      border: none;
+    }
+    
+    .pdf-modal-close {
+      background: transparent;
+      border: none;
+      color: var(--accent-rose);
+      font-size: 1.6rem;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+    
+    .pdf-modal-close:hover {
+      color: var(--accent-vert);
+      background: rgba(0, 0, 0, 0.05);
+      transform: rotate(90deg);
+    }
+    
+    .pdf-modal-download {
+      font-size: 0.8rem;
+      margin-top: 0.4rem;
+      color: var(--muted);
+    }
+    
+    .pdf-modal-download a {
+      color: var(--accent-rose);
+      text-decoration: underline;
+    }
+
+    /* MODAL IMAGE */
+    .image-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      z-index: 100;
+    }
+    
+    .image-modal.open {
+      display: flex;
+    }
+    
+    .image-modal-inner {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .image-modal-content {
+      flex: 1;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .image-modal-content img {
+      max-width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    .image-modal-close {
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      color: var(--text);
+      font-size: 1.8rem;
+      cursor: pointer;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      z-index: 101;
+    }
+    
+    .image-modal-close:hover {
+      background: white;
+      transform: rotate(90deg);
+    }
+    
+    .image-modal-caption {
+      color: white;
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+    }
+    
+    .image-modal-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      color: var(--text);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.8rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      z-index: 101;
+    }
+    
+    .image-modal-nav:hover {
+      background: white;
+      transform: translateY(-50%) scale(1.1);
+    }
+    
+    .image-modal-prev {
+      left: 20px;
+    }
+    
+    .image-modal-next {
+      right: 20px;
+    }
+
+    /* CONFIRMATION MODALE */
+    .confirmation-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      z-index: 100;
+    }
+    
+    .confirmation-modal.open {
+      display: flex;
+    }
+    
+    .confirmation-modal-inner {
+      position: relative;
+      max-width: 500px;
+      width: 100%;
+      background: white;
+      border-radius: 20px;
+      padding: 2.5rem;
+      border: 1px solid rgba(209, 213, 219, 0.9);
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.6);
+      text-align: center;
+    }
+    
+    .confirmation-modal h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--accent-vert);
+    }
+    
+    .confirmation-modal p {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    
+    .confirmation-modal-close {
+      background: linear-gradient(135deg, var(--accent-rose), var(--accent-vert));
+      color: white;
+      border: none;
+      border-radius: 999px;
+      padding: 0.9rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .confirmation-modal-close:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 82, 115, 0.35);
+    }
+
+    /* FOOTER */
+    footer {
+      background: #111827;
+      color: #e5e7eb;
+      font-size: 0.82rem;
+      padding: 1.4rem 1.25rem 1.6rem;
+    }
+    
+    .footer-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .footer-links a {
+      color: #e5e7eb;
+      text-decoration: underline;
+      font-weight: 500;
+      margin-left: 0.35rem;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .hero-grid, .two-columns, .terrain-grid, .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      
+      .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .card {
+        min-height: 320px;
+      }
+      
+      .captcha-options {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .nav-links {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: white;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        padding: 2rem;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 40;
+      }
+      
+      .nav-links.is-open {
+        transform: translateX(0);
+      }
+      
+      .nav-links a {
+        font-size: 1.2rem;
+      }
+      
+      .nav-toggle {
+        display: block;
+        z-index: 50;
+      }
+      
+      .nav-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(6px, 6px);
+      }
+      
+      .nav-toggle.active span:nth-child(2) {
+        opacity: 0;
+      }
+      
+      .nav-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px);
+      }
+      
+      section { 
+        padding: 3rem 1rem; 
+      }
+      
+      .hero-title {
+        font-size: 2rem;
+      }
+      
+      .hero-actions {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+      
+      .grid-4 {
+        grid-template-columns: 1fr;
+      }
+      
+      .card {
+        min-height: 300px;
+        padding: 1.8rem 1.5rem 5rem;
+      }
+      
+      .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+      }
+      
+      .image-modal-close {
+        top: 10px;
+        right: 10px;
+      }
+      
+      .image-modal-nav {
+        padding: 0.6rem 0.8rem;
+        font-size: 1.2rem;
+      }
+      
+      .image-modal-prev {
+        left: 10px;
+      }
+      
+      .image-modal-next {
+        right: 10px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .hero-title {
+        font-size: 1.8rem;
+      }
+      
+      .section-title {
+        font-size: 1.8rem;
+      }
+      
+      .btn-pdf {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.8rem;
+      }
+      
+      .confirmation-modal-inner {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<div class="back-to-top" id="backToTop">
+  <i class="fas fa-arrow-up"></i>
+</div>
+
+<div class="page">
+  <header>
+    <nav class="nav">
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="img/logo-chamalieres.png" alt="Logo du site de démonstration">
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">
+            <span class="rose">Collectif</span>
+            <span class="vert">Demo</span>
+          </span>
+          <span class="brand-sub">Exemple de maquette de site web</span>
+        </div>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <div class="nav-links" id="nav-links">
+        <a href="#accueil" class="nav-link active">Accueil</a>
+        <a href="#collectif" class="nav-link">Le collectif</a>
+        <a href="#projet" class="nav-link">Le projet</a>
+        <a href="#terrain" class="nav-link">Sur le terrain</a>
+        <a href="#consultation" class="nav-link">Questionnaire</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="accueil">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <p class="kicker">Collectif Demo</p>
+          <h1 class="hero-title">
+            Une page de démonstration pour
+            <span class="rose">présenter</span> une
+            <span class="vert">maquette moderne</span>.
+          </h1>
+          <p class="hero-subtitle">
+            Ce site est un simple exemple d'interface, pensé pour illustrer une mise en page
+            responsive avec différents blocs de contenu. Les textes sont purement
+            démonstratifs et peuvent être remplacés par vos propres informations.
+          </p>
+          <div class="hero-actions">
+            <a href="#projet" class="btn btn-primary">
+              <i class="fas fa-rocket"></i> Voir la maquette
+            </a>
+            <a href="#consultation" class="btn btn-ghost">
+              <i class="fas fa-comment-dots"></i> Tester le formulaire
+            </a>
+          </div>
+          <div class="hero-meta">
+            <div class="hero-meta-item">
+              <span class="hero-meta-label">Contexte</span>
+              <span class="hero-meta-value">Site de démonstration</span>
+            </div>
+            <div class="hero-meta-item">
+              <span class="hero-meta-label">Approche</span>
+              <span class="hero-meta-value">Design & ergonomie</span>
+            </div>
+            <div class="hero-meta-item">
+              <span class="hero-meta-label">Sections</span>
+              <span class="hero-meta-value">4 axes majeurs</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="hero-card">
+          <div class="hero-card-content">
+            <div class="hero-card-pill"><i class="fas fa-heart"></i> Exemple de valeurs</div>
+            <h2 class="hero-card-title">Une interface simple et lisible</h2>
+            <p class="hero-card-text">
+              Ce bloc illustre la présentation d'idées ou de valeurs. Ici, il sert
+              uniquement d'exemple pour montrer un encadré avec un titre, un texte
+              et quelques mots-clés mis en avant.
+            </p>
+            <div class="hero-card-tags">
+              <span class="tag">Responsive</span>
+              <span class="tag">Accessibilité</span>
+              <span class="tag">Design épuré</span>
+              <span class="tag">Texte factice</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- COLLECTIF -->
+    <section id="collectif">
+      <div class="container">
+        <div class="group-photo-card">
+          <img src="groupe-chamalieres.jpg" alt="Photo de groupe de démonstration" data-image-index="0">
+          <p class="group-photo-caption">
+            Exemple d'illustration : ici, une simple photo de groupe pour habiller la mise en page.
+          </p>
+        </div>
+
+        <h2 class="section-title">Le collectif (exemple)</h2>
+        <p class="section-intro">
+          Cette section présente un texte de démonstration. Elle montre comment aligner
+          un paragraphe introductif, quelques cartes et un visuel dans une même page.
+          Vous pouvez y insérer n'importe quel contenu adapté à votre projet réel.
+        </p>
+
+        <div class="grid-4">
+          <article class="card" data-theme="soin">
+            <div class="member-initials">A1</div>
+            <h3 class="member-name">Un premier axe de travail</h3>
+            <p class="member-role">Sous-titre de démonstration</p>
+            <p class="member-bio">
+              Ce texte n'a qu'une vocation illustrative. Il sert à remplir la carte
+              avec quelques lignes, afin de tester l'affichage et le rendu typographique.
+            </p>
+            <a href="#" class="btn-pdf" 
+               data-pdf="docs/exemple-axe-1.pdf"
+               data-pdf-title="Document de démonstration – Axe 1">
+              <i class="fas fa-file-pdf"></i> Voir le document (PDF)
+            </a>
+          </article>
+
+          <article class="card" data-theme="democratie">
+            <div class="member-initials">A2</div>
+            <h3 class="member-name">Un deuxième axe de travail</h3>
+            <p class="member-role">Sous-titre de démonstration</p>
+            <p class="member-bio">
+              Ici encore, le texte est générique. Il permet de visualiser le comportement
+              des blocs, des titres et des boutons sur différents écrans.
+            </p>
+            <a href="#" class="btn-pdf"
+               data-pdf="docs/exemple-axe-2.pdf"
+               data-pdf-title="Document de démonstration – Axe 2">
+              <i class="fas fa-file-pdf"></i> Voir le document (PDF)
+            </a>
+          </article>
+
+          <article class="card" data-theme="pratique">
+            <div class="member-initials">A3</div>
+            <h3 class="member-name">Un troisième axe de travail</h3>
+            <p class="member-role">Sous-titre de démonstration</p>
+            <p class="member-bio">
+              Vous pouvez remplacer ce paragraphe par une description réelle, ou
+              conserver ce texte factice si le site sert uniquement de maquette.
+            </p>
+            <a href="#" class="btn-pdf"
+               data-pdf="docs/exemple-axe-3.pdf"
+               data-pdf-title="Document de démonstration – Axe 3">
+              <i class="fas fa-file-pdf"></i> Voir le document (PDF)
+            </a>
+          </article>
+
+          <article class="card" data-theme="ecologie">
+            <div class="member-initials">A4</div>
+            <h3 class="member-name">Un quatrième axe de travail</h3>
+            <p class="member-role">Sous-titre de démonstration</p>
+            <p class="member-bio">
+              Dernier exemple de carte dans cette grille. L'objectif est simplement
+              de montrer l'alignement, les couleurs et les effets au survol.
+            </p>
+            <a href="#" class="btn-pdf"
+               data-pdf="docs/exemple-axe-4.pdf"
+               data-pdf-title="Document de démonstration – Axe 4">
+              <i class="fas fa-file-pdf"></i> Voir le document (PDF)
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJET -->
+    <section id="projet">
+      <div class="container">
+        <h2 class="section-title">Présentation du projet (exemple)</h2>
+        <p class="section-intro">
+          Les textes de cette partie sont volontairement neutres et génériques. Ils
+          servent uniquement à illustrer une structure en colonnes avec des listes,
+          des pictogrammes et des encadrés de mise en avant.
+        </p>
+
+        <!-- Axe 1 -->
+        <div class="two-columns">
+          <div>
+            <h3 class="section-title" style="font-size:1.4rem;margin-bottom:1.2rem;">
+              1. Un premier volet de contenu
+            </h3>
+            <ul class="bullet-list">
+              <li class="bullet">
+                <div class="bullet-icon">🏙️</div>
+                <div class="bullet-content">
+                  <p class="bullet-title">Exemple de point important</p>
+                  <p class="bullet-text">
+                    Ce paragraphe montre comment présenter une idée clé avec une icône,
+                    un titre et un texte descriptif. Il ne renvoie à aucun contexte réel.
+                  </p>
+                </div>
+              </li>
+              <li class="bullet">
+                <div class="bullet-icon">🛍️</div>
+                <div class="bullet-content">
+                  <p class="bullet-title">Autre exemple de point</p>
+                  <p class="bullet-text">
+                    Vous pouvez utiliser ce modèle pour décrire un service, un produit
+                    ou tout autre élément que vous souhaitez mettre en valeur.
+                  </p>
+                </div>
+              </li>
+              <li class="bullet">
+                <div class="bullet-icon">🎉</div>
+                <div class="bullet-content">
+                  <p class="bullet-title">Élément complémentaire</p>
+                  <p class="bullet-text">
+                    Il s'agit simplement d'un texte de remplissage. Remplacez-le par vos
+                    propres informations pour adapter la page à votre projet.
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <aside class="highlight">
+            <div class="highlight-content">
+              <h3 class="highlight-title">Bloc de mise en avant</h3>
+              <p class="highlight-text">
+                Cet encadré permet de mettre l'accent sur un message particulier, une
+                information importante ou un résumé de la section. Ici, le texte est générique.
+              </p>
+              <p class="highlight-tagline">
+                Utilisez ce type de bloc pour attirer l'œil sur un point clé.
+              </p>
+            </div>
+          </aside>
+        </div>
+
+        <!-- Axe 2 -->
+        <div class="two-columns">
+          <div>
+            <h3 class="section-title" style="font-size:1.4rem;margin-bottom:1.2rem;">
+              2. Un deuxième volet de contenu
+            </h3>
+            <ul class="bullet-list">
+              <li class="bullet">
+                <div class="bullet-icon">🏠</div>
+                <div class="bullet-content">
+                  <p class="bullet-title">Exemple de description</p>
+                  <p class="bullet-text">
+                    Ce contenu est volontairement neutre. Il illustre la place d'un
+                    paragraphe explicatif dans une liste structurée.
+                  </p>
+                </div>
+              </li>
+              <li class="bullet">
+                <div class="bullet-icon">🤝</div>
+                <div class="bullet-content">
+                  <p class="bullet-title">Texte factice supplémentaire</p>
+                  <p class="bullet-text">
+                    Vous pouvez y décrire une idée, une démarche, un service ou un
+                    engagement, selon l'objectif de votre propre site.
+                  </p>
+                </div>
+              </li>
+              <li class="bullet">
+                <div class="bullet-icon">⚕️</div>
+                <div class="bullet-content">
+                  <p class="bullet-title">Bloc de démonstration</p>
+                  <p class="bullet-text">
+                    Rien dans ce texte n'a de valeur contractuelle ou politique. Il s'agit
+                    simplement d'un exemple de mise en forme.
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <aside class="highlight">
+            <div class="highlight-content">
+              <h3 class="highlight-title">Texte neutre et illustratif</h3>
+              <p class="highlight-text">
+                Les phrases affichées ici sont totalement génériques. Elles ont pour
+                seul objectif de montrer le rendu visuel de l'encadré avec un titre
+                et quelques lignes de texte.
+              </p>
+              <p class="highlight-tagline">
+                Remplacez ce contenu par vos propres informations lorsque vous serez prêt.
+              </p>
+            </div>
+          </aside>
+        </div>
+
+        <!-- Axe 3 -->
+        <div class="two-columns">
+          <div>
+            <h3 class="section-title" style="font-size:1.4rem;margin-bottom:1.2rem;">
+              3. Un troisième volet de contenu
+            </h3>
+            <ul class="bullet-list">
+              <li class="bullet">
+                <div class="bullet-icon">🚲</div>
+                <div class="bullet-content">
+                  <p class="bullet-title">Titre de liste</p>
+                  <p class="bullet-text">
+                    Encore un exemple de bloc, avec une icône à gauche et un texte
+                    descriptif à droite, pour construire une liste claire et aérée.
+                  </p>
+                </div>
+              </li>
+              <li class="bullet">
+                <div class="bullet-icon">🌳</div>
+                <div class="bullet-content">
+                  <p class="bullet-title">Texte de remplissage</p>
+                  <p class="bullet-text">
+                    Utilisez ce modèle pour présenter différents thèmes, fonctionnalités
+                    ou idées, sans vous soucier de la mise en forme.
+                  </p>
+                </div>
+              </li>
+              <li class="bullet">
+                <div class="bullet-icon">♻️</div>
+                <div class="bullet-content">
+                  <p class="bullet-title">Élément de démonstration</p>
+                  <p class="bullet-text">
+                    Ce paragraphe peut être raccourci, allongé ou entièrement remplacé.
+                    Il n'est là qu'à titre d'exemple.
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <aside class="highlight">
+            <div class="highlight-content">
+              <h3 class="highlight-title">Exemple de focus</h3>
+              <p class="highlight-text">
+                Vous pouvez utiliser ce type de focus pour détailler un projet, une
+                fonctionnalité centrale ou un lieu spécifique, selon votre besoin.
+              </p>
+              <p class="highlight-text">
+                Dans cette version de démonstration, aucune information n'est liée
+                à un contexte réel ou à une collectivité particulière.
+              </p>
+            </div>
+          </aside>
+        </div>
+
+        <!-- Axe 4 -->
+        <div class="two-columns">
+          <div>
+            <h3 class="section-title" style="font-size:1.4rem;margin-bottom:1.2rem;">
+              4. Un quatrième volet de contenu
+            </h3>
+            <ul class="bullet-list">
+              <li class="bullet">
+                <div class="bullet-icon">🤝</div>
+                <div class="bullet-content">
+                  <p class="bullet-title">Structure de rubrique</p>
+                  <p class="bullet-text">
+                    Ce modèle montre comment articuler plusieurs points dans un
+                    même bloc, avec une présentation homogène.
+                  </p>
+                </div>
+              </li>
+              <li class="bullet">
+                <div class="bullet-icon">🏛️</div>
+                <div class="bullet-content">
+                  <p class="bullet-title">Exemple d'intitulé</p>
+                  <p class="bullet-text">
+                    Le texte est volontairement neutre. Il ne fait référence à
+                    aucun projet, organisme ou territoire existant.
+                  </p>
+                </div>
+              </li>
+              <li class="bullet">
+                <div class="bullet-icon">🌐</div>
+                <div class="bullet-content">
+                  <p class="bullet-title">Bloc supplémentaire</p>
+                  <p class="bullet-text">
+                    Ajoutez, supprimez ou réorganisez ces éléments selon la
+                    manière dont vous souhaitez structurer vos contenus.
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <aside class="highlight">
+            <div class="highlight-content">
+              <h3 class="highlight-title">Vision de démonstration</h3>
+              <p class="highlight-text">
+                Ce texte pourrait être remplacé par une vision stratégique, un
+                résumé de projet ou un message de conclusion.
+              </p>
+              <p class="highlight-tagline">
+                Ici, il s'agit simplement d'un exemple pour tester le design.
+              </p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- TERRAIN -->
+    <section id="terrain">
+      <div class="container">
+        <h2 class="section-title">Exemples de rendez-vous</h2>
+        <p class="section-intro">
+          Cette partie illustre une section "agenda" ou "événements" avec des
+          photos, une chronologie et quelques descriptifs. Les rendez-vous sont
+          fictifs et servent uniquement de modèle.
+        </p>
+
+        <div class="terrain-grid">
+          <div>
+            <div class="group-photo-card">
+              <div class="photo-grid">
+                <div class="photo-grid-item">
+                  <img src="img/rencontre.jpg" alt="Rencontre de démonstration" data-image-index="1">
+                </div>
+                <div class="photo-grid-item">
+                  <img src="img/recueillir.jpg" alt="Moment d'échange fictif" data-image-index="2">
+                </div>
+                <div class="photo-grid-item">
+                  <img src="img/echange.jpg" alt="Discussion autour d'un projet imaginaire" data-image-index="3">
+                </div>
+                <div class="photo-grid-item">
+                  <img src="img/actif.jpg" alt="Groupe en action (exemple)" data-image-index="4">
+                </div>
+              </div>
+              <p class="photo-caption">Exemples de visuels pour illustrer des rencontres ou des événements.</p>
+            </div>
+          </div>
+
+          <aside class="events-card">
+            <h3 class="events-title">Prochains rendez-vous (fictifs)</h3>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="timeline-date">Samedi 15 juin</div>
+                <h4>Présence sur un marché local</h4>
+                <p>Exemple de description d'un stand ou d'un point d'information pour échanger avec le public.</p>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-date">Mercredi 19 juin</div>
+                <h4>Balade urbaine de démonstration</h4>
+                <p>Texte factice pour présenter un parcours commenté ou une visite de quartier.</p>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-date">Samedi 22 juin</div>
+                <h4>Café-rencontre convivial</h4>
+                <p>Un moment imaginaire pour discuter autour d'un projet ou d'une thématique.</p>
+              </div>
+            </div>
+            <p style="font-size:0.9rem;color:var(--muted);margin-top:1.5rem;">
+              Cet agenda est fourni à titre d'exemple. Adaptez-le en fonction de vos besoins réels.
+            </p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONSULTATION -->
+    <section id="consultation">
+      <div class="container">
+        <h2 class="section-title">Questionnaire de démonstration</h2>
+        <p class="section-intro">
+          Cette section illustre l'intégration d'un formulaire externe dans la
+          page au moyen d'une iframe. Le lien ci-dessous est un exemple et peut
+          être remplacé par votre propre formulaire en ligne.
+        </p>
+
+        <div class="form-wrapper">
+          <iframe
+            src="https://example.com/formulaire-demo"
+            title="Questionnaire de démonstration">
+          </iframe>
+          <p class="form-note">
+            Si le questionnaire ne s'affiche pas correctement :
+            <a class="btn-link"
+               href="https://example.com/formulaire-demo"
+               target="_blank" rel="noopener noreferrer">
+              Ouvrir le formulaire dans un nouvel onglet
+            </a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="container">
+        <h2 class="section-title">Contact (exemple)</h2>
+        <p class="section-intro">
+          Ce formulaire de contact est entièrement fictif. Il permet de tester
+          la mise en forme des champs, du bouton d'envoi et du système de
+          vérification simple intégré.
+        </p>
+
+        <div class="contact-grid">
+          <div class="contact-card">
+            <p>
+              Utilisez cette zone pour expliquer l'objectif du formulaire :
+              prise de contact, demande d'informations, retour d'expérience,
+              etc. Ici, le texte reste volontairement générique.
+            </p>
+            <form id="contact-form" method="post">
+              <div>
+                <label for="nom">Nom *</label>
+                <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+              </div>
+              <div>
+                <label for="email">E-mail *</label>
+                <input type="email" id="email" name="email" placeholder="vous@example.com" required>
+              </div>
+              <div>
+                <label for="message">Message *</label>
+                <textarea id="message" name="message" placeholder="Votre message..." required></textarea>
+              </div>
+              
+              <!-- CAPTCHA -->
+              <div class="captcha-container">
+                <div class="captcha-title">Vérification de sécurité</div>
+                <div class="captcha-question" id="captchaQuestion">
+                  Question de vérification (exemple).
+                </div>
+                <div class="captcha-options">
+                  <div class="captcha-option">
+                    <input type="radio" id="captchaOption1" name="captcha" value="incorrect">
+                    <label for="captchaOption1">Option 1</label>
+                  </div>
+                  <div class="captcha-option">
+                    <input type="radio" id="captchaOption2" name="captcha" value="correct">
+                    <label for="captchaOption2">Option 2</label>
+                  </div>
+                  <div class="captcha-option">
+                    <input type="radio" id="captchaOption3" name="captcha" value="incorrect">
+                    <label for="captchaOption3">Option 3</label>
+                  </div>
+                  <div class="captcha-option">
+                    <input type="radio" id="captchaOption4" name="captcha" value="incorrect">
+                    <label for="captchaOption4">Option 4</label>
+                  </div>
+                </div>
+                <div class="captcha-error" id="captchaError">
+                  ❌ Veuillez sélectionner la bonne réponse pour continuer.
+                </div>
+                <div class="captcha-success" id="captchaSuccess">
+                  ✅ Vérification réussie !
+                </div>
+              </div>
+              
+              <div>
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                  Envoyer
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="social-box">
+            <h3>Coordonnées (exemple)</h3>
+            <p><strong>E-mail :</strong><br>contact@example.com</p>
+
+            <div style="margin-top: 2rem;">
+              <a class="btn btn-primary" 
+                 href="https://www.facebook.com"
+                 target="_blank" rel="noopener noreferrer"
+                 style="background: #1877f2; display: block; text-align: center; margin-bottom: 1rem;">
+                Page Facebook de démonstration
+              </a>
+              
+              <a class="btn-link"
+                 href="https://www.instagram.com"
+                 target="_blank" rel="noopener noreferrer"
+                 style="display: block; text-align: center;">
+                Profil Instagram de démonstration
+              </a>
+            </div>
+
+            <p style="margin-top: 2rem; font-size: 0.9rem; padding: 1rem; background: rgba(148, 163, 184, 0.05); border-radius: 8px;">
+              <strong>Bloc de texte factice :</strong><br>
+              Ce paragraphe sert uniquement à remplir l'espace et illustrer la mise en forme
+              d'une note ou d'une information complémentaire.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL PDF -->
+  <div class="pdf-modal" id="pdfModal" aria-hidden="true">
+    <div class="pdf-modal-inner">
+      <div class="pdf-modal-header">
+        <div class="pdf-modal-title" id="pdfModalTitle">Document PDF</div>
+        <button class="pdf-modal-close" id="pdfModalClose" aria-label="Fermer le document PDF">×</button>
+      </div>
+      <div class="pdf-modal-content">
+        <iframe id="pdfFrame" class="pdf-frame" src="" title="Document PDF"></iframe>
+      </div>
+      <p class="pdf-modal-download">
+        Si le document ne s'affiche pas correctement, vous pouvez le
+        <a href="#" id="pdfDownloadLink" target="_blank" rel="noopener">télécharger en cliquant ici</a>.
+      </p>
+    </div>
+  </div>
+
+  <!-- MODAL IMAGE -->
+  <div class="image-modal" id="imageModal" aria-hidden="true">
+    <button class="image-modal-close" id="imageModalClose" aria-label="Fermer la visionneuse">×</button>
+    <button class="image-modal-nav image-modal-prev" id="imagePrev" aria-label="Image précédente">❮</button>
+    <button class="image-modal-nav image-modal-next" id="imageNext" aria-label="Image suivante">❯</button>
+    <div class="image-modal-inner">
+      <div class="image-modal-content">
+        <img id="modalImage" src="" alt="">
+      </div>
+      <div class="image-modal-caption" id="modalCaption"></div>
+    </div>
+  </div>
+
+  <!-- MODAL DE CONFIRMATION -->
+  <div class="confirmation-modal" id="confirmationModal">
+    <div class="confirmation-modal-inner">
+      <h3>Merci pour votre message !</h3>
+      <p id="confirmationText">
+        Votre message a été envoyé avec succès. Ce texte est un exemple de notification de confirmation.
+      </p>
+      <button class="confirmation-modal-close" id="confirmationClose">Fermer</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <span>© <span id="year"></span> Site de démonstration. Tous droits réservés.</span>
+      <span>Maquette d'interface web — contenu purement illustratif.</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // Initialisation
+  document.addEventListener('DOMContentLoaded', () => {
+    // Année automatique
+    document.getElementById('year').textContent = new Date().getFullYear();
+    
+    // Menu mobile
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('nav-links');
+    
+    if (navToggle && navLinks) {
+      navToggle.addEventListener('click', () => {
+        navToggle.classList.toggle('active');
+        navLinks.classList.toggle('is-open');
+      });
+      
+      // Fermer le menu en cliquant sur un lien
+      navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          navToggle.classList.remove('active');
+          navLinks.classList.remove('is-open');
+        });
+      });
+    }
+    
+    // Progress bar
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('progressBar').style.width = scrolled + '%';
+    });
+    
+    // Bouton retour en haut
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    });
+    
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // Navigation fluide
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+    
+    // --------- CAPTCHA ---------
+    const captchaOptions = document.querySelectorAll('.captcha-option input');
+    const captchaError = document.getElementById('captchaError');
+    const captchaSuccess = document.getElementById('captchaSuccess');
+    const submitBtn = document.getElementById('submitBtn');
+    let captchaVerified = false;
+    
+    // Questions CAPTCHA (génériques)
+    const captchaQuestions = [
+      {
+        question: "Combien font 2 + 2 ?",
+        correct: "4",
+        options: ["3", "4", "5", "6"]
+      },
+      {
+        question: "Quelle est la couleur principale du bouton « Envoyer » ?",
+        correct: "Rose",
+        options: ["Bleu", "Vert", "Rose", "Violet"]
+      },
+      {
+        question: "Quel jour vient après lundi ?",
+        correct: "Mardi",
+        options: ["Dimanche", "Mardi", "Jeudi", "Samedi"]
+      },
+      {
+        question: "Lequel de ces mots désigne un animal ?",
+        correct: "Chat",
+        options: ["Table", "Chat", "Chaise", "Livre"]
+      }
+    ];
+    
+    // Changer la question CAPTCHA aléatoirement
+    function changeCaptchaQuestion() {
+      const randomIndex = Math.floor(Math.random() * captchaQuestions.length);
+      const question = captchaQuestions[randomIndex];
+      
+      document.getElementById('captchaQuestion').textContent = question.question;
+      
+      // Mélanger les options
+      const shuffledOptions = [...question.options].sort(() => Math.random() - 0.5);
+      
+      // Mettre à jour les options
+      captchaOptions.forEach((option, index) => {
+        const label = option.nextElementSibling;
+        label.textContent = shuffledOptions[index];
+        
+        // Déterminer si cette option est correcte
+        option.value = (shuffledOptions[index] === question.correct) ? 'correct' : 'incorrect';
+        
+        // Désélectionner toutes les options
+        option.checked = false;
+      });
+      
+      // Réinitialiser l'état
+      captchaVerified = false;
+      captchaError.style.display = 'none';
+      captchaSuccess.style.display = 'none';
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.5';
+      submitBtn.style.cursor = 'not-allowed';
+    }
+    
+    // Initialiser la question CAPTCHA
+    changeCaptchaQuestion();
+    
+    // Vérifier la sélection CAPTCHA
+    captchaOptions.forEach(option => {
+      option.addEventListener('change', (e) => {
+        if (e.target.value === 'correct') {
+          captchaVerified = true;
+          captchaError.style.display = 'none';
+          captchaSuccess.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '1';
+          submitBtn.style.cursor = 'pointer';
+        } else {
+          captchaVerified = false;
+          captchaError.style.display = 'block';
+          captchaSuccess.style.display = 'none';
+          submitBtn.disabled = true;
+          submitBtn.style.opacity = '0.5';
+          submitBtn.style.cursor = 'not-allowed';
+        }
+      });
+    });
+    
+    // --------- FORMULAIRE DE CONTACT ---------
+    const form = document.getElementById('contact-form');
+    const confirmationModal = document.getElementById('confirmationModal');
+    const confirmationClose = document.getElementById('confirmationClose');
+    const confirmationText = document.getElementById('confirmationText');
+    
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Vérifier le CAPTCHA
+        if (!captchaVerified) {
+          captchaError.style.display = 'block';
+          captchaError.textContent = "❌ Veuillez sélectionner la bonne réponse pour continuer.";
+          return;
+        }
+        
+        const formData = new FormData(form);
+        const name = formData.get('nom') || 'utilisateur';
+        const email = formData.get('email');
+        
+        // Simulation d'envoi
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Envoi en cours...';
+        submitBtn.disabled = true;
+        
+        setTimeout(() => {
+          confirmationText.textContent = `Merci ${name} ! Ceci est un message de confirmation de démonstration. Une réponse pourrait être envoyée à l'adresse ${email}.`;
+          confirmationModal.classList.add('open');
+          
+          form.reset();
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '0.5';
+          submitBtn.style.cursor = 'not-allowed';
+          
+          changeCaptchaQuestion();
+        }, 1500);
+      });
+    }
+    
+    // Fermer la modale de confirmation
+    if (confirmationClose) {
+      confirmationClose.addEventListener('click', () => {
+        confirmationModal.classList.remove('open');
+      });
+    }
+    
+    if (confirmationModal) {
+      confirmationModal.addEventListener('click', (e) => {
+        if (e.target === confirmationModal) {
+          confirmationModal.classList.remove('open');
+        }
+      });
+    }
+    
+    // --------- MODAL PDF ---------
+    const pdfModal = document.getElementById('pdfModal');
+    const pdfFrame = document.getElementById('pdfFrame');
+    const pdfModalClose = document.getElementById('pdfModalClose');
+    const pdfDownloadLink = document.getElementById('pdfDownloadLink');
+    const pdfModalTitle = document.getElementById('pdfModalTitle');
+    const pdfLinks = document.querySelectorAll('[data-pdf]');
+    
+    function openPdfModal(url, title) {
+      if (!pdfModal || !pdfFrame) return;
+      pdfFrame.src = url;
+      if (pdfDownloadLink) {
+        pdfDownloadLink.href = url;
+      }
+      if (pdfModalTitle && title) {
+        pdfModalTitle.textContent = title;
+      }
+      pdfModal.classList.add('open');
+      pdfModal.setAttribute('aria-hidden', 'false');
+    }
+    
+    function closePdfModal() {
+      if (!pdfModal || !pdfFrame) return;
+      pdfModal.classList.remove('open');
+      pdfModal.setAttribute('aria-hidden', 'true');
+      pdfFrame.src = "";
+    }
+    
+    pdfLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const url = link.getAttribute('data-pdf');
+        const title = link.getAttribute('data-pdf-title') || 'Document PDF';
+        if (url) {
+          openPdfModal(url, title);
+        }
+      });
+    });
+    
+    if (pdfModalClose) {
+      pdfModalClose.addEventListener('click', closePdfModal);
+    }
+    
+    if (pdfModal) {
+      pdfModal.addEventListener('click', (e) => {
+        if (e.target === pdfModal) {
+          closePdfModal();
+        }
+      });
+    }
+    
+    // --------- MODAL IMAGE ---------
+    const imageModal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalCaption = document.getElementById('modalCaption');
+    const imageModalClose = document.getElementById('imageModalClose');
+    const imagePrev = document.getElementById('imagePrev');
+    const imageNext = document.getElementById('imageNext');
+    
+    const siteImages = [
+      {
+        src: 'groupe-chamalieres.jpg',
+        alt: 'Photo de groupe de démonstration',
+        caption: 'Exemple de photo de groupe utilisée comme illustration.'
+      },
+      {
+        src: 'img/rencontre.jpg',
+        alt: 'Rencontre de démonstration',
+        caption: 'Image illustrative pour une rencontre ou un temps d\'échange.'
+      },
+      {
+        src: 'img/recueillir.jpg',
+        alt: 'Moment d\'échange fictif',
+        caption: 'Visuel d\'exemple pour illustrer une discussion.'
+      },
+      {
+        src: 'img/echange.jpg',
+        alt: 'Discussion autour d\'un projet imaginaire',
+        caption: 'Illustration d\'un échange en petit groupe.'
+      },
+      {
+        src: 'img/actif.jpg',
+        alt: 'Groupe en action (exemple)',
+        caption: 'Photo symbolique d\'un groupe en action.'
+      }
+    ];
+    
+    let currentImageIndex = 0;
+    
+    function openImageModal(index) {
+      currentImageIndex = index;
+      const image = siteImages[index];
+      modalImage.src = image.src;
+      modalImage.alt = image.alt;
+      modalCaption.textContent = image.caption;
+      imageModal.classList.add('open');
+      imageModal.setAttribute('aria-hidden', 'false');
+      
+      imagePrev.style.display = index === 0 ? 'none' : 'flex';
+      imageNext.style.display = index === siteImages.length - 1 ? 'none' : 'flex';
+    }
+    
+    function closeImageModal() {
+      imageModal.classList.remove('open');
+      imageModal.setAttribute('aria-hidden', 'true');
+    }
+    
+    function showNextImage() {
+      if (currentImageIndex < siteImages.length - 1) {
+        openImageModal(currentImageIndex + 1);
+      }
+    }
+    
+    function showPrevImage() {
+      if (currentImageIndex > 0) {
+        openImageModal(currentImageIndex - 1);
+      }
+    }
+    
+    document.addEventListener('keydown', (e) => {
+      if (imageModal.classList.contains('open')) {
+        if (e.key === 'Escape') {
+          closeImageModal();
+        } else if (e.key === 'ArrowRight') {
+          showNextImage();
+        } else if (e.key === 'ArrowLeft') {
+          showPrevImage();
+        }
+      }
+    });
+    
+    document.querySelectorAll('img[data-image-index]').forEach(img => {
+      img.addEventListener('click', () => {
+        const index = parseInt(img.getAttribute('data-image-index'));
+        openImageModal(index);
+      });
+    });
+    
+    if (imageModalClose) {
+      imageModalClose.addEventListener('click', closeImageModal);
+    }
+    
+    if (imagePrev) {
+      imagePrev.addEventListener('click', showPrevImage);
+    }
+    
+    if (imageNext) {
+      imageNext.addEventListener('click', showNextImage);
+    }
+    
+    if (imageModal) {
+      imageModal.addEventListener('click', (e) => {
+        if (e.target === imageModal) {
+          closeImageModal();
+        }
+      });
+    }
+    
+    // Gestionnaire d'événements global pour Échap
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (pdfModal && pdfModal.classList.contains('open')) {
+          closePdfModal();
+        }
+        if (imageModal && imageModal.classList.contains('open')) {
+          closeImageModal();
+        }
+        if (confirmationModal && confirmationModal.classList.contains('open')) {
+          confirmationModal.classList.remove('open');
+        }
+      }
+    });
+  });
+</script>
+</body>
+</html>
+
 
