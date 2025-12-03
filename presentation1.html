@@ -2201,6 +2201,7 @@
         
         // Vérifier le CAPTCHA
         if (!captchaVerified) {
+          e.preventDefault();
           captchaError.style.display = 'block';
           captchaError.textContent = "❌ Veuillez sélectionner la bonne réponse pour continuer.";
           return;
