@@ -1,1 +1,1 @@
-petite présentation d'activite et de projet clef en main pour un collectif
+Présentation de notre Collectif : Activités & Projets Clés en Main
